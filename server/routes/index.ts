@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authRoutes } from './auth.routes';
 import { userRoutes } from './users.routes';
 import { invitationRoutes } from './invitations.routes';
+import { organisationRoutes } from './organisations.routes';
 import { projectRoutes } from './projects.routes';
 import { sourceRoutes } from './sources.routes';
 import { mappingRoutes } from './mapping.routes';
@@ -21,6 +22,9 @@ router.use('/auth', authRoutes);
 // User management routes
 router.use('/users', userRoutes);
 router.use('/invitations', invitationRoutes);
+
+// Organisation routes
+router.use('/organisations', organisationRoutes);
 
 // Project routes
 router.use('/projects', projectRoutes);

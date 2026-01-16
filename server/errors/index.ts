@@ -43,6 +43,9 @@ export const ERROR_CODES = {
   // API connection errors
   CONNECTION_FAILED: 'CONNECTION_FAILED',
   INVALID_CREDENTIALS_API: 'INVALID_CREDENTIALS_API',
+
+  // Operation errors
+  INVALID_OPERATION: 'INVALID_OPERATION',
 } as const;
 
 export type ErrorCode = typeof ERROR_CODES[keyof typeof ERROR_CODES];

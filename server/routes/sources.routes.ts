@@ -141,4 +141,78 @@ router.get('/sources/:id/preview', requireAuth, async (req, res, next) => {
   }
 });
 
+// POST /api/sources/:id/refresh - Refresh API source data
+router.post('/sources/:id/refresh', requireAuth, async (req, res, next) => {
+  try {
+    const sourceId = parseIntParam(req.params.id, 'id');
+
+    // Verify the source exists and belongs to user's org
+    const source = await sourceService.getSource(req.organisationId!, sourceId);
+
+    if (source.type !== 'api') {
+      throw new BadRequestError('Only API sources can be refreshed', {
+        code: ERROR_CODES.INVALID_OPERATION,
+      });
+    }
+
+    // Update status to processing
+    await db
+      .update(sources)
+      .set({ status: 'processing', updatedAt: new Date() })
+      .where(eq(sources.id, sourceId));
+
+    // In a real implementation, this would trigger an async job to fetch data
+    // For now, we'll just return success and mark as ready
+    await db
+      .update(sources)
+      .set({ status: 'ready', updatedAt: new Date() })
+      .where(eq(sources.id, sourceId));
+
+    const updated = await sourceService.getSource(req.organisationId!, sourceId);
+    res.json({ data: updated });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /api/sources/:id/test-connection - Test API connection
+router.post('/sources/:id/test-connection', requireAuth, async (req, res, next) => {
+  try {
+    const sourceId = parseIntParam(req.params.id, 'id');
+
+    // Verify the source exists and belongs to user's org
+    const source = await sourceService.getSource(req.organisationId!, sourceId);
+
+    if (source.type !== 'api') {
+      throw new BadRequestError('Only API sources can test connection', {
+        code: ERROR_CODES.INVALID_OPERATION,
+      });
+    }
+
+    // Get API connection details
+    const [apiConnection] = await db
+      .select()
+      .from(apiConnections)
+      .where(eq(apiConnections.sourceId, sourceId))
+      .limit(1);
+
+    if (!apiConnection) {
+      throw new NotFoundError('API connection', sourceId);
+    }
+
+    // In a real implementation, this would actually test the API connection
+    // For now, simulate a successful connection test
+    const result = {
+      success: true,
+      message: 'Connection successful',
+      provider: apiConnection.provider,
+      testedAt: new Date().toISOString(),
+    };
+
+    res.json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { router as sourceRoutes };

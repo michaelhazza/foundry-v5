@@ -104,9 +104,7 @@ class ApiClient {
     return this.request<T>('DELETE', path);
   }
 
-  async upload<T>(path: string, file: File, fieldName: string = 'file'): Promise<T> {
-    const formData = new FormData();
-    formData.append(fieldName, file);
+  async upload<T>(path: string, formData: FormData): Promise<T> {
     return this.request<T>('POST', path, { body: formData });
   }
 }

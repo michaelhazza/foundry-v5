@@ -89,4 +89,47 @@ router.get('/runs/:id/exports', requireAuth, async (req, res, next) => {
   }
 });
 
+// GET /api/runs/:id/report - Get processing report with detailed statistics
+router.get('/runs/:id/report', requireAuth, async (req, res, next) => {
+  try {
+    const runId = parseIntParam(req.params.id, 'id');
+    const run = await processingService.getRunDetails(req.organisationId!, runId);
+
+    const totalRecords = run.totalRecords || 0;
+    const recordsProcessed = run.recordsProcessed || 0;
+    const recordsFiltered = run.recordsFiltered || 0;
+
+    // Compile report with statistics
+    const report = {
+      run: {
+        id: run.id,
+        status: run.status,
+        startedAt: run.startedAt,
+        completedAt: run.completedAt,
+      },
+      statistics: {
+        totalRecords,
+        processedRecords: recordsProcessed,
+        filteredRecords: recordsFiltered,
+        processingRate: totalRecords > 0
+          ? ((recordsProcessed / totalRecords) * 100).toFixed(2) + '%'
+          : '0%',
+        filterRate: totalRecords > 0
+          ? ((recordsFiltered / totalRecords) * 100).toFixed(2) + '%'
+          : '0%',
+      },
+      deidentification: run.piiStats || {},
+      duration: run.startedAt && run.completedAt
+        ? Math.round(
+            (new Date(run.completedAt).getTime() - new Date(run.startedAt).getTime()) / 1000
+          )
+        : null,
+    };
+
+    res.json({ data: report });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { router as processingRoutes };

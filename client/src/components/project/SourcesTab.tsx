@@ -58,7 +58,7 @@ export function SourcesTab({ projectId }: SourcesTabProps) {
     formData.append('name', files[0].name);
 
     try {
-      await api.upload(`/projects/${projectId}/sources/upload`, formData);
+      await api.upload(`/projects/${projectId}/sources/file`, formData);
       queryClient.invalidateQueries({ queryKey: queryKeys.sources.list(projectId) });
       toast({ title: 'File uploaded successfully' });
     } catch {

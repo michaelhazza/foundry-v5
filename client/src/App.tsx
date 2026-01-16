@@ -12,6 +12,7 @@ import DashboardPage from './pages/DashboardPage';
 import ProjectsListPage from './pages/projects/ProjectsListPage';
 import ProjectDetailPage from './pages/projects/ProjectDetailPage';
 import TeamSettingsPage from './pages/settings/TeamSettingsPage';
+import OrganizationSettingsPage from './pages/settings/OrganizationSettingsPage';
 import ProfilePage from './pages/settings/ProfilePage';
 import ActivityLogPage from './pages/ActivityLogPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -108,6 +109,7 @@ function App() {
         <Route path="projects" element={<ProjectsListPage />} />
         <Route path="projects/:id" element={<ProjectDetailPage />} />
         <Route path="settings/team" element={<TeamSettingsPage />} />
+        <Route path="settings/organization" element={<OrganizationSettingsPage />} />
         <Route path="settings/profile" element={<ProfilePage />} />
         <Route path="activity" element={<ActivityLogPage />} />
       </Route>

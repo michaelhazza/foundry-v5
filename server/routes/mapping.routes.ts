@@ -51,4 +51,39 @@ router.get('/projects/:projectId/mapping/suggestions', requireAuth, async (req, 
   }
 });
 
+// POST /api/projects/:projectId/mapping/auto-detect - Auto-detect and apply mappings
+router.post('/projects/:projectId/mapping/auto-detect', requireAuth, async (req, res, next) => {
+  try {
+    const projectId = parseIntParam(req.params.projectId, 'projectId');
+
+    // Get auto-detected suggestions
+    const suggestions = await mappingService.getAutoDetectedMappings(
+      req.organisationId!,
+      projectId
+    );
+
+    // Apply the suggestions
+    if (suggestions.length > 0) {
+      await mappingService.updateProjectMappings(
+        req.organisationId!,
+        projectId,
+        suggestions.map(s => ({
+          sourceField: s.sourceField,
+          targetField: s.targetField,
+          transform: null,
+        }))
+      );
+    }
+
+    // Return updated mappings
+    const mappings = await mappingService.getProjectMappings(
+      req.organisationId!,
+      projectId
+    );
+    res.json({ data: mappings });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { router as mappingRoutes };
