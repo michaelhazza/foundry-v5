@@ -35,6 +35,7 @@ export const queryKeys = {
   // Sources
   sources: {
     all: ['sources'] as const,
+    list: (projectId: number) => [...queryKeys.sources.all, 'list', projectId] as const,
     byProject: (projectId: number) => [...queryKeys.sources.all, 'project', projectId] as const,
     detail: (id: number) => [...queryKeys.sources.all, id] as const,
     preview: (id: number) => [...queryKeys.sources.all, id, 'preview'] as const,
@@ -43,6 +44,7 @@ export const queryKeys = {
   // Mapping
   mapping: {
     all: ['mapping'] as const,
+    list: (projectId: number) => [...queryKeys.mapping.all, 'list', projectId] as const,
     byProject: (projectId: number) => [...queryKeys.mapping.all, 'project', projectId] as const,
   },
 
@@ -56,6 +58,7 @@ export const queryKeys = {
   // Filters
   filters: {
     all: ['filters'] as const,
+    list: (projectId: number) => [...queryKeys.filters.all, 'list', projectId] as const,
     byProject: (projectId: number) => [...queryKeys.filters.all, 'project', projectId] as const,
   },
 
@@ -64,6 +67,7 @@ export const queryKeys = {
     all: ['processing'] as const,
     status: (projectId: number) => [...queryKeys.processing.all, 'status', projectId] as const,
     runs: (projectId: number) => [...queryKeys.processing.all, 'runs', projectId] as const,
+    history: (projectId: number) => [...queryKeys.processing.all, 'history', projectId] as const,
   },
 
   // Runs
@@ -72,6 +76,13 @@ export const queryKeys = {
     detail: (id: number) => [...queryKeys.runs.all, id] as const,
     report: (id: number) => [...queryKeys.runs.all, id, 'report'] as const,
     exports: (id: number) => [...queryKeys.runs.all, id, 'exports'] as const,
+  },
+
+  // Exports
+  exports: {
+    all: ['exports'] as const,
+    list: (runId: number) => [...queryKeys.exports.all, 'list', runId] as const,
+    detail: (id: number) => [...queryKeys.exports.all, id] as const,
   },
 
   // Activity

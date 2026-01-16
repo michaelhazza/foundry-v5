@@ -89,7 +89,7 @@ async function shutdown(signal: string) {
       logger.info('Database connection closed');
       process.exit(0);
     } catch (err) {
-      logger.error('Error during shutdown:', err);
+      logger.error({ err }, 'Error during shutdown');
       process.exit(1);
     }
   });

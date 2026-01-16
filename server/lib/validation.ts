@@ -2,19 +2,20 @@ import { BadRequestError, ERROR_CODES } from '../errors';
 
 /**
  * Parse and validate an integer parameter from URL params
- * @param value - The string value to parse
+ * @param value - The string value to parse (or string array, takes first element)
  * @param paramName - The parameter name for error messages
  * @returns The parsed integer
  * @throws BadRequestError if the value is not a valid positive integer
  */
-export function parseIntParam(value: string, paramName: string): number {
-  const parsed = parseInt(value, 10);
+export function parseIntParam(value: string | string[], paramName: string): number {
+  const strValue = Array.isArray(value) ? value[0] : value;
+  const parsed = parseInt(strValue, 10);
 
   if (isNaN(parsed) || parsed < 1 || !Number.isInteger(parsed)) {
     throw new BadRequestError(`Invalid ${paramName}: must be a positive integer`, {
       code: ERROR_CODES.INVALID_ID,
       param: paramName,
-      value,
+      value: strValue,
     });
   }
 

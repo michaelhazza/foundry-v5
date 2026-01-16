@@ -7,15 +7,23 @@ import { LoadingState } from '@/components/common/LoadingState';
 import { ErrorState } from '@/components/common/ErrorState';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Settings } from 'lucide-react';
+import {
+  SourcesTab,
+  MappingTab,
+  PrivacyTab,
+  FiltersTab,
+  ProcessingTab,
+  ExportsTab,
+} from '@/components/project';
 
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const projectId = parseInt(id!);
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: queryKeys.projects.detail(parseInt(id!)),
+    queryKey: queryKeys.projects.detail(projectId),
     queryFn: () => api.get<{ data: any }>(`/projects/${id}`),
     enabled: !!id,
   });
@@ -61,87 +69,27 @@ export default function ProjectDetailPage() {
         </TabsList>
 
         <TabsContent value="sources">
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Sources</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Upload files or connect to APIs to import your data.
-              </p>
-              {/* Sources component will be implemented here */}
-            </CardContent>
-          </Card>
+          <SourcesTab projectId={projectId} />
         </TabsContent>
 
         <TabsContent value="mapping">
-          <Card>
-            <CardHeader>
-              <CardTitle>Field Mapping</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Map your source fields to standard conversation fields.
-              </p>
-              {/* Mapping component will be implemented here */}
-            </CardContent>
-          </Card>
+          <MappingTab projectId={projectId} />
         </TabsContent>
 
         <TabsContent value="privacy">
-          <Card>
-            <CardHeader>
-              <CardTitle>Privacy Configuration</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Configure de-identification settings for PII removal.
-              </p>
-              {/* Privacy component will be implemented here */}
-            </CardContent>
-          </Card>
+          <PrivacyTab projectId={projectId} />
         </TabsContent>
 
         <TabsContent value="filters">
-          <Card>
-            <CardHeader>
-              <CardTitle>Quality Filters</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Set up filters to ensure data quality.
-              </p>
-              {/* Filters component will be implemented here */}
-            </CardContent>
-          </Card>
+          <FiltersTab projectId={projectId} />
         </TabsContent>
 
         <TabsContent value="processing">
-          <Card>
-            <CardHeader>
-              <CardTitle>Processing</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Process your data and view processing history.
-              </p>
-              {/* Processing component will be implemented here */}
-            </CardContent>
-          </Card>
+          <ProcessingTab projectId={projectId} />
         </TabsContent>
 
         <TabsContent value="exports">
-          <Card>
-            <CardHeader>
-              <CardTitle>Exports</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Download your processed data in various formats.
-              </p>
-              {/* Exports component will be implemented here */}
-            </CardContent>
-          </Card>
+          <ExportsTab projectId={projectId} />
         </TabsContent>
       </Tabs>
     </div>
