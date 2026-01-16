@@ -7,12 +7,14 @@ dist/
 # Compiled TypeScript
 *.js
 *.js.map
-*.d.ts
-*.d.ts.map
 
 # Keep TypeScript source files
 !*.ts
 !*.tsx
+
+# But ignore declaration files (must come after !*.ts)
+*.d.ts
+*.d.ts.map
 
 # Environment files
 .env
